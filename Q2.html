@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Operações Aritméticas</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="h-screen">
+  <div id="main" class="h-screen flex items-center justify-center">
+    <form
+      class="bg-gray-300 shadow-md rounded px-8 pt-6 pb-8 mb-4"
+      id="meuForm" action="" method="get"
+    >
+      <div class="mb-4 ">
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="num1">
+          Primeiro número
+        </label>
+        <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+               type="number" name="num1" id="num1" required>
+      </div>
+
+      <div class="mb-4 ">
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="num2">
+          Segundo número
+        </label>
+        <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+               type="number" name="num2" id="num2" required>
+      </div>
+      
+      <div class="flex items-center justify-center">
+        <input class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit" value="Calcular">
+      </div>
+    </form>
+  </div>
+
+  <script>
+    document.getElementById("meuForm").addEventListener("submit", function (e){
+      e.preventDefault();
+      // Recuperar os valores e converter para inteiros
+      let a = parseInt(document.getElementById("num1").value, 10);
+      let b = parseInt(document.getElementById("num2").value, 10);
+
+      // Remove o formulário
+      document.getElementById("meuForm").remove();
+
+      // Calcula operações
+      let soma = a + b;
+      let subtracao = a - b;
+      let multiplicacao = a * b;
+      let divisao = (a / b) 
+
+      // Exibe resultados
+      document.getElementById("main").innerHTML = `
+        <div class='min-w-80 bg-gray-300 shadow-md rounded px-8 pt-6 pb-8 mb-4 flex flex-col'>
+          <h1 class='font-bold text-lg mb-2'>Resultados</h1>
+          <p>Soma: <strong>${soma}</strong></p>
+          <p>Subtração: <strong>${subtracao}</strong></p>
+          <p>Multiplicação: <strong>${multiplicacao}</strong></p>
+          <p>Divisão: <strong>${divisao}</strong></p>
+        </div>
+      `;
+    });
+  </script>
+</body>
+</html>
