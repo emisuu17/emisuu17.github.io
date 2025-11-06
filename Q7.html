@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Comparação de Números</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="h-screen">
+  <div id="main" class="h-screen flex items-center justify-center">
+    <form
+      class="bg-gray-300 shadow-md rounded px-8 pt-6 pb-8 mb-4"
+      id="meuForm" action="" method="get"
+    >
+      <div class="mb-4 ">
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="num1">
+          Primeiro número
+        </label>
+        <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+               type="number" name="num1" id="num1" required>
+      </div>
+
+      <div class="mb-4 ">
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="num2">
+          Segundo número
+        </label>
+        <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+               type="number" name="num2" id="num2" required>
+      </div>
+      
+      <div class="flex items-center justify-center">
+        <input class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit" value="Comparar">
+      </div>
+    </form>
+  </div>
+
+  <script>
+    document.getElementById("meuForm").addEventListener("submit", function (e){
+      e.preventDefault();
+
+      let num1 = parseInt(document.getElementById("num1").value, 10);
+      let num2 = parseInt(document.getElementById("num2").value, 10);
+      let mensagem = "";
+
+      if (num1 > num2) {
+        mensagem = `O primeiro número (${num1}) é maior que o segundo (${num2}).`;
+      } else if (num1 < num2) {
+        mensagem = `O primeiro número (${num1}) é menor que o segundo (${num2}).`;
+      } else {
+        mensagem = `Os dois números são iguais (${num1}).`;
+      }
+
+      document.getElementById("meuForm").remove();
+
+      document.getElementById("main").innerHTML = `
+        <div class='min-w-80 bg-gray-300 shadow-md rounded px-8 pt-6 pb-8 mb-4 flex flex-col'>
+          <h1 class='font-bold text-lg mb-2'>Resultado</h1>
+          <p>${mensagem}</p>
+        </div>
+      `;
+    });
+  </script>
+</body>
+</html>
