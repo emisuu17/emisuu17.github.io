@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Conversão de Temperatura</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="h-screen">
+  <div id="main" class="h-screen flex items-center justify-center">
+    <form
+      class="bg-gray-300 shadow-md rounded px-8 pt-6 pb-8 mb-4"
+      id="meuForm" action="" method="get"
+    >
+      <div class="mb-4 ">
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="celsius">
+          Temperatura em Celsius
+        </label>
+        <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+               type="number" step="any" name="celsius" id="celsius" required>
+      </div>
+
+      <div class="flex items-center justify-center">
+        <input class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit" value="Converter">
+      </div>
+    </form>
+  </div>
+
+  <script>
+    document.getElementById("meuForm").addEventListener("submit", function (e){
+      e.preventDefault();
+
+      // Recupera e converte a temperatura
+      let celsius = parseFloat(document.getElementById("celsius").value);
+      let fahrenheit = (celsius * 9/5) + 32;
+
+      // Remove o formulário
+      document.getElementById("meuForm").remove();
+
+      // Exibe o resultado
+      document.getElementById("main").innerHTML = `
+        <div class='min-w-80 bg-gray-300 shadow-md rounded px-8 pt-6 pb-8 mb-4 flex flex-col'>
+          <h1 class='font-bold text-lg mb-2'>Resultado</h1>
+          <p>Temperatura em Celsius: <strong>${celsius.toFixed(2)}°C</strong></p>
+          <p>Temperatura em Fahrenheit: <strong>${fahrenheit.toFixed(2)}°F</strong></p>
+        </div>
+      `;
+    });
+  </script>
+</body>
+</html>

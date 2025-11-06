@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Salário Anual</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="h-screen">
+  <div id="main" class="h-screen flex items-center justify-center">
+    <form
+      class="bg-gray-300 shadow-md rounded px-8 pt-6 pb-8 mb-4"
+      id="meuForm" action="" method="get"
+    >
+      <div class="mb-4 ">
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="salario">
+          Salário mensal
+        </label>
+        <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+               type="number" step="any" name="salario" id="salario" required>
+      </div>
+
+      <div class="mb-4 ">
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="meses">
+          Meses trabalhados no ano
+        </label>
+        <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+               type="number" name="meses" id="meses" min="0" max="12" required>
+      </div>
+      
+      <div class="flex items-center justify-center">
+        <input class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit" value="Calcular">
+      </div>
+    </form>
+  </div>
+
+  <script>
+    document.getElementById("meuForm").addEventListener("submit", function (e){
+      e.preventDefault();
+
+      let salario = parseFloat(document.getElementById("salario").value);
+      let meses = parseInt(document.getElementById("meses").value, 10);
+      let salarioAnual = salario * meses;
+
+      document.getElementById("meuForm").remove();
+
+      document.getElementById("main").innerHTML = `
+        <div class='min-w-80 bg-gray-300 shadow-md rounded px-8 pt-6 pb-8 mb-4 flex flex-col'>
+          <h1 class='font-bold text-lg mb-2'>Resultado</h1>
+          <p>Salário mensal: <strong>R$ ${salario.toFixed(2)}</strong></p>
+          <p>Meses trabalhados: <strong>${meses}</strong></p>
+          <p>Salário anual: <strong>R$ ${salarioAnual.toFixed(2)}</strong></p>
+        </div>
+      `;
+    });
+  </script>
+</body>
+</html>
