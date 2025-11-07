@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Manipular Array</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .box { min-width:320px; max-width:640px; }
+    .array-item { background:#fff; padding:6px 10px; border-radius:6px; margin:4px 0; }
+  </style>
+</head>
+<body class="h-screen bg-gray-100">
+  <div id="main" class="h-screen flex items-center justify-center">
+    <div class="box bg-gray-300 shadow-md rounded px-8 pt-6 pb-8 mb-4">
+      <h1 class="font-bold text-lg mb-4">Array Dinâmico</h1>
+
+      <div class="mb-4">
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="valor">Valor</label>
+        <input id="valor" name="valor" type="text"
+          class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 focus:outline-none focus:shadow-outline"
+          placeholder="Digite um país">
+      </div>
+
+      <div class="flex gap-2 mb-4">
+        <button id="btnPush" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Push</button>
+        <button id="btnUnshift" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Unshift</button>
+        <button id="btnPop" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Pop</button>
+        <button id="btnShift" class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded">Shift</button>
+      </div>
+
+      <div class="mb-2">
+        <h2 class="font-semibold">Array atual</h2>
+        <div id="mostraArray" class="mt-2 p-3 rounded border border-gray-400 bg-gray-100 min-h-[60px]">
+        </div>
+      </div>
+
+      <p class="text-sm text-gray-600 mt-3">Use Push para adicionar ao final, Unshift para adicionar no início. Pop remove do final, Shift remove do início.</p>
+    </div>
+  </div>
+
+  <script>
+   
+    let arr = ["Brasil","Argentina","Canadá","Portugal","Japão"];
+
+    const mostra = document.getElementById("mostraArray");
+    function atualizar() {
+      mostra.innerHTML = "";
+      if (arr.length === 0) {
+        mostra.innerHTML = "<div class='text-gray-500'>Array vazio</div>";
+        return;
+      }
+      for (let i = 0; i < arr.length; i++) {
+        const item = document.createElement("div");
+        item.className = "array-item";
+        item.textContent = `${i}: ${arr[i]}`;
+        mostra.appendChild(item);
+      }
+    }
+
+
+    const input = document.getElementById("valor");
+    document.getElementById("btnPush").addEventListener("click", function (e) {
+      e.preventDefault();
+      const v = input.value.trim();
+      if (v !== "") {
+        arr.push(v);
+        input.value = "";
+        atualizar();
+      }
+    });
+
+    document.getElementById("btnUnshift").addEventListener("click", function (e) {
+      e.preventDefault();
+      const v = input.value.trim();
+      if (v !== "") {
+        arr.unshift(v);
+        input.value = "";
+        atualizar();
+      }
+    });
+
+    document.getElementById("btnPop").addEventListener("click", function (e) {
+      e.preventDefault();
+      if (arr.length > 0) {
+        arr.pop();
+        atualizar();
+      }
+    });
+
+    document.getElementById("btnShift").addEventListener("click", function (e) {
+      e.preventDefault();
+      if (arr.length > 0) {
+        arr.shift();
+        atualizar();
+      }
+    });
+
+    atualizar();
+  </script>
+</body>
+</html>

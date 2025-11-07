@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Funções de Array</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .box { min-width:320px; max-width:720px; }
+    .array-item { background:#fff; padding:6px 10px; border-radius:6px; margin:4px 0; }
+  </style>
+</head>
+<body class="h-screen bg-gray-100">
+  <div id="main" class="h-screen flex items-center justify-center">
+    <div class="box bg-gray-300 shadow-md rounded px-8 pt-6 pb-8 mb-4">
+      <h1 class="font-bold text-lg mb-4">Travessia e Transformação de Array</h1>
+
+      <div class="mb-4">
+        <h2 class="font-semibold">Array atual</h2>
+        <div id="mostraArray" class="mt-2 p-3 rounded border border-gray-400 bg-gray-100 min-h-[60px]"></div>
+      </div>
+
+      <div class="flex flex-wrap gap-2 mb-4">
+        <button id="btnSort" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded">Sort (ordenar)</button>
+        <button id="btnFilter" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Filter (&gt; 2)</button>
+        <button id="btnMap" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Map (dobrar)</button>
+        <button id="btnFind" class="bg-yellow-600 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded">Find (== 10)</button>
+        <button id="btnReduce" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Reduce (soma)</button>
+        <button id="btnReset" class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">Resetar</button>
+      </div>
+
+      <p class="text-sm text-gray-600">Clique nos botões para aplicar as operações. Algumas operações atualizam o array, outras apenas mostram resultados.</p>
+    </div>
+  </div>
+
+  <script>
+    let arr = [3, 1, 10, 2, 5];
+
+    const mostra = document.getElementById("mostraArray");
+
+    function atualizar() {
+      mostra.innerHTML = "";
+      if (arr.length === 0) {
+        mostra.innerHTML = "<div class='text-gray-500'>Array vazio</div>";
+        return;
+      }
+      for (let i = 0; i < arr.length; i++) {
+        const item = document.createElement("div");
+        item.className = "array-item";
+        item.textContent = `${i}: ${arr[i]}`;
+        mostra.appendChild(item);
+      }
+    }
+
+    document.getElementById("btnSort").addEventListener("click", function(e){
+      e.preventDefault();
+      arr = arr.slice().sort(function(a,b){ return a - b; });
+      atualizar();
+    });
+
+    document.getElementById("btnFilter").addEventListener("click", function(e){
+      e.preventDefault();
+      arr = arr.filter(function(x){ return x > 2; });
+      atualizar();
+    });
+
+
+    document.getElementById("btnMap").addEventListener("click", function(e){
+      e.preventDefault();
+      arr = arr.map(function(x){ return x * 2; });
+      atualizar();
+    });
+
+   
+    document.getElementById("btnFind").addEventListener("click", function(e){
+      e.preventDefault();
+      const encontrado = arr.find(function(x){ return x === 10; });
+      if (encontrado === undefined) {
+        alert("Nenhum elemento igual a 10 encontrado no array atual.");
+      } else {
+        alert("Primeiro elemento igual a 10 encontrado: " + encontrado);
+      }
+    });
+
+    document.getElementById("btnReduce").addEventListener("click", function(e){
+      e.preventDefault();
+      const soma = arr.reduce(function(acc, cur){ return acc + cur; }, 0);
+      alert("Resultado da redução (soma): " + soma);
+    });
+
+    document.getElementById("btnReset").addEventListener("click", function(e){
+      e.preventDefault();
+      arr = [3, 1, 10, 2, 5];
+      atualizar();
+    });
+
+   
+    atualizar();
+  </script>
+</body>
+</html>

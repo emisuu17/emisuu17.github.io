@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Busca por Número</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .box { min-width:320px; max-width:900px; }
+    .array-item { background:#fff; padding:6px 10px; border-radius:6px; margin:4px 0; }
+    .controls { display:flex; flex-wrap:wrap; gap:8px; }
+  </style>
+</head>
+<body class="h-screen bg-gray-100">
+  <div id="main" class="h-screen flex items-center justify-center">
+    <div class="box bg-gray-300 shadow-md rounded px-8 pt-6 pb-8 mb-4">
+      <h1 class="font-bold text-lg mb-4">Busca Linear com Contador de Comparações</h1>
+
+      <div class="mb-4">
+        <h2 class="font-semibold">Array atual</h2>
+        <div id="mostraArray" class="mt-2 p-3 rounded border border-gray-400 bg-gray-100 min-h-[60px]"></div>
+      </div>
+
+      <div class="mb-4">
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="busca">Número para buscar</label>
+        <input id="busca" name="busca" type="number"
+               class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 focus:outline-none focus:shadow-outline"
+               placeholder="Digite um número">
+      </div>
+
+      <div class="controls mb-4">
+        <button id="btnBuscar" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Buscar</button>
+        <button id="btnReset" class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">Resetar Array</button>
+      </div>
+
+      <div id="resultado" class="mt-4 p-3 rounded border border-gray-400 bg-white min-h-[60px]"></div>
+      <p class="text-sm text-gray-600 mt-3">Busca linear (for) contabilizando o número de comparações até encontrar ou percorrer todo o array.</p>
+    </div>
+  </div>
+
+  <script>
+   
+    let arrInicial = [3, 1, 10, 2, 5, 8, 13];
+    let arr = arrInicial.slice();
+
+    const mostraArray = document.getElementById("mostraArray");
+    const resultado = document.getElementById("resultado");
+
+    function atualizarVisuais() {
+      if (arr.length === 0) {
+        mostraArray.innerHTML = "<div class='text-gray-500'>Array vazio</div>";
+        return;
+      }
+      mostraArray.innerHTML = "";
+      for (let i = 0; i < arr.length; i++) {
+        const d = document.createElement("div");
+        d.className = "array-item";
+        d.textContent = i + ": " + arr[i];
+        mostraArray.appendChild(d);
+      }
+    }
+
+    function buscarLinear(array, valor) {
+      let comparacoes = 0;
+      for (let i = 0; i < array.length; i++) {
+        comparacoes++;
+        if (array[i] === valor) {
+          return { encontrado: true, posicao: i, comparacoes: comparacoes };
+        }
+      }
+      return { encontrado: false, posicao: null, comparacoes: comparacoes };
+    }
+
+    document.getElementById("btnBuscar").addEventListener("click", function(e){
+      e.preventDefault();
+      const raw = document.getElementById("busca").value;
+      if (raw === "") {
+        resultado.innerHTML = "<strong>Informe um número para buscar.</strong>";
+        return;
+      }
+      const valor = Number(raw);
+      if (Number.isNaN(valor)) {
+        resultado.innerHTML = "<strong>Entrada inválida.</strong>";
+        return;
+      }
+
+      const res = buscarLinear(arr, valor);
+
+      if (res.encontrado) {
+        resultado.innerHTML = `
+          <p><strong>Resultado:</strong> Número <strong>${valor}</strong> encontrado na posição <strong>${res.posicao}</strong>.</p>
+          <p><strong>Comparações realizadas:</strong> ${res.comparacoes}</p>
+        `;
+      } else {
+        resultado.innerHTML = `
+          <p><strong>Resultado:</strong> Número <strong>${valor}</strong> não encontrado.</p>
+          <p><strong>Comparações realizadas:</strong> ${res.comparacoes}</p>
+        `;
+      }
+    });
+
+    document.getElementById("btnReset").addEventListener("click", function(e){
+      e.preventDefault();
+      arr = arrInicial.slice();
+      resultado.innerHTML = "<strong>Array resetado para o valor inicial.</strong>";
+      atualizarVisuais();
+    });
+
+    atualizarVisuais();
+  </script>
+</body>
+</html>
