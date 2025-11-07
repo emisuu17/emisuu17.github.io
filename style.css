@@ -26,7 +26,7 @@ body{
 
 h2{
     font-size: 2.5rem;
-    margin-bottom:2rem;
+    margin-bottom:4rem;
     text-align: center;
     color:var(--cor-secudaria)
 }
@@ -195,4 +195,68 @@ section{
 
 #projetos,#skills{
     margin-bottom:4rem;
+}
+
+.contato {
+    background-color: var(--cor-secudaria);
+    color: white;
+    
+}
+
+.contato-form {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.grupo-formulario {
+    margin-bottom: 1.5rem;
+}
+
+label {
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+input, textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 5px;
+    background-color: rgba(255, 255, 255, 0.1);
+    color: white; 
+}
+
+button {
+    background-color: var(--cor-auxiliar);
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer; 
+}
+
+.titulo-contato {
+    color:white;
+}
+
+footer {
+    background-color: var(--cor-secudaria);
+    text-align: center;
+    padding: 2rem 0;
+}
+
+.icones-footer {
+    display: flex;
+    justify-content: center;
+    list-style: none;
+    margin-bottom: 1rem;
+}
+
+@keyframes fade {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in {
+    animation: fade 1s ease-out;
 }
