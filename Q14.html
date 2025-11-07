@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Adivinhe a Fruta</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="h-screen">
+  <div id="main" class="h-screen flex items-center justify-center">
+    <form
+      class="bg-gray-300 shadow-md rounded px-8 pt-6 pb-8 mb-4"
+      id="meuForm" action="" method="get"
+    >
+      <div class="mb-4 ">
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="palpite">
+          Adivinhe a palavra (5 letras) — Dica: é uma fruta
+        </label>
+        <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+               type="text" name="palpite" id="palpite" minlength="5" maxlength="5" required>
+      </div>
+
+      <div class="flex items-center justify-center">
+        <input class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit" value="Tentar">
+      </div>
+    </form>
+  </div>
+
+  <script>
+    document.getElementById("meuForm").addEventListener("submit", function (e){
+      e.preventDefault();
+
+      const secreto = "manga";
+      let palpite = document.getElementById("palpite").value.trim().toLowerCase();
+      document.getElementById("meuForm").remove();
+
+      let tentativas = 0;
+      let historico = '';
+
+      while (true) {
+        tentativas++;
+        if (palpite === secreto) {
+          historico += `<p>Tentativa ${tentativas}: ${palpite} — correto!</p>`;
+          break;
+        } else {
+          historico += `<p>Tentativa ${tentativas}: ${palpite} — incorreto.</p>`;
+        }
+        const proximo = prompt("Tente novamente: digite uma palavra de 5 letras (dica: é uma fruta)");
+        if (proximo === null) {
+          historico += `<p>Jogo encerrado pelo usuário.</p>`;
+          break;
+        }
+        palpite = proximo.trim().toLowerCase();
+      }
+
+      document.getElementById("main").innerHTML = `
+        <div class='min-w-80 bg-gray-300 shadow-md rounded px-8 pt-6 pb-8 mb-4 flex flex-col'>
+          <h1 class='font-bold text-lg mb-2'>Resultado</h1>
+          ${historico}
+          <p class="mt-2"><strong>Total de tentativas:</strong> ${tentativas}</p>
+        </div>
+      `;
+    });
+  </script>
+</body>
+</html>

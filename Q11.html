@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Pares até N</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="h-screen">
+  <div id="main" class="h-screen flex items-center justify-center">
+    <form
+      class="bg-gray-300 shadow-md rounded px-8 pt-6 pb-8 mb-4"
+      id="meuForm" action="" method="get"
+    >
+      <div class="mb-4 ">
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="numero">
+          Digite um número (maior ou igual a 0)
+        </label>
+        <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+               type="number" name="numero" id="numero" min="0" required>
+      </div>
+
+      <div class="flex items-center justify-center">
+        <input class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit" value="Mostrar Pares">
+      </div>
+    </form>
+  </div>
+
+  <script>
+    document.getElementById("meuForm").addEventListener("submit", function (e){
+      e.preventDefault();
+
+      let n = parseInt(document.getElementById("numero").value, 10);
+      if (Number.isNaN(n) || n < 0) n = 0;
+
+      document.getElementById("meuForm").remove();
+
+      let itens = '';
+      for (let i = 0; i <= n; i++) {
+        if (i % 2 === 0) {
+          itens += `<li>${i}</li>`;
+        }
+      }
+
+      document.getElementById("main").innerHTML = `
+        <div class='min-w-80 bg-gray-300 shadow-md rounded px-8 pt-6 pb-8 mb-4 flex flex-col'>
+          <h1 class='font-bold text-lg mb-2'>Números pares de 0 até ${n}</h1>
+          <ol class="list-decimal pl-6">${itens}</ol>
+        </div>
+      `;
+    });
+  </script>
+</body>
+</html>
