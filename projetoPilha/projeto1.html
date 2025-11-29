@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projeto1</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+
+</head>
+<body>
+    <div id="main" class="h-screen flex items-center justify-center">
+    <form 
+        class="bg-gray-300 shadow-md rounded px-8 pt-6 pb-8 mb-4"
+        id="meuForm" action="" method="get"
+    >
+        <div class="mb-4 ">
+            <label class="block text-gray-700 text-sm font-bold mb-2" for="decimal">
+              Número Decimal
+            </label>
+            <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            type="number" name="decimal" id="decimal" required>
+        </div>
+        
+        <div class="flex items-center justify-center">
+            <input class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" 
+            type="submit" value="Converter">
+        </div>
+    </form>
+</div>
+
+<script>
+    document.getElementById("meuForm").addEventListener("submit", function (e){
+        e.preventDefault()
+        
+        // Recuperar o valor decimal
+        let decimalInput = document.getElementById("decimal")
+        let numeroDecimal = parseInt(decimalInput.value)
+
+        // Função para converter decimal em binário usando pilha
+        function decimalParaBinario(num){
+            let pilha = []
+            let binario = ""
+
+            while(num > 0){
+                let resto = num % 2
+                pilha.push(resto)
+                num = Math.floor(num / 2)
+            }
+
+            while(pilha.length > 0){
+                binario += pilha.pop()
+            }
+
+            return binario || "0"
+        }
+
+        let resultado = decimalParaBinario(numeroDecimal)
+
+        // Remove o formulário
+        document.getElementById("meuForm").remove()
+
+        // Adiciona o resultado
+        document.getElementById("main").innerHTML = `
+            <div class='min-w-80 bg-gray-300 shadow-md rounded px-8 pt-6 pb-8 mb-4 flex flex-col'>
+                <h1 class='font-bold text-lg mb-2'>Resultado:</h1>
+                <p class='text-gray-800'>Decimal: ${numeroDecimal}</p>
+                <p class='text-gray-800'>Binário: ${resultado}</p>
+            </div>
+        `
+    })
+</script>
+</body>
+</html>

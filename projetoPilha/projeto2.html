@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projeto2</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+    <div id="main" class="h-screen flex items-center justify-center">
+    <form 
+        class="bg-gray-300 shadow-md rounded px-8 pt-6 pb-8 mb-4"
+        id="meuForm" action="" method="get"
+    >
+        <div class="mb-4 ">
+            <label class="block text-gray-700 text-sm font-bold mb-2" for="codigo">
+              Código para validar
+            </label>
+            <textarea class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            name="codigo" id="codigo" rows="6" required></textarea>
+        </div>
+        
+        <div class="flex items-center justify-center">
+            <input class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" 
+            type="submit" value="Validar">
+        </div>
+    </form>
+</div>
+
+<script>
+    document.getElementById("meuForm").addEventListener("submit", function (e){
+        e.preventDefault()
+        
+        // Recuperar o código digitado
+        let codigoInput = document.getElementById("codigo")
+        let codigo = codigoInput.value
+
+        // Função para verificar balanceamento usando pilha
+        function verificarBalanceamento(str){
+            let pilha = []
+            let pares = {
+                ')':'(',
+                ']':'[',
+                '}':'{'
+            }
+
+            for(let i=0; i<str.length; i++){
+                let char = str[i]
+
+                if(char === '(' || char === '[' || char === '{'){
+                    pilha.push(char)
+                } else if(char === ')' || char === ']' || char === '}'){
+                    if(pilha.length === 0 || pilha[pilha.length-1] !== pares[char]){
+                        return `Erro: símbolo '${char}' na posição ${i+1} não está balanceado.`
+                    }
+                    pilha.pop()
+                }
+            }
+
+            if(pilha.length === 0){
+                return "Código balanceado!"
+            } else {
+                return "Código não está balanceado. Há símbolos abertos sem fechamento."
+            }
+        }
+
+        let resultado = verificarBalanceamento(codigo)
+
+        // Remove o formulário
+        document.getElementById("meuForm").remove()
+
+        // Adiciona o resultado
+        document.getElementById("main").innerHTML = `
+            <div class='min-w-80 bg-gray-300 shadow-md rounded px-8 pt-6 pb-8 mb-4 flex flex-col'>
+                <h1 class='font-bold text-lg mb-2'>Resultado:</h1>
+                <p class='text-gray-800 whitespace-pre-line'>${resultado}</p>
+            </div>
+        `
+    })
+</script>
+</body>
+</html>
