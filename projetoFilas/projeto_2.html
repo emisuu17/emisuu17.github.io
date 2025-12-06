@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Fila Pole Position F1</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+  <div id="main" class="min-h-screen flex items-start justify-center py-10">
+    <div class="w-full max-w-2xl bg-white shadow-md rounded px-8 pt-6 pb-8">
+      <h1 class="text-2xl font-bold mb-4">Pole Position - Fórmula 1</h1>
+      <div class="flex justify-center mb-6">
+        <img src="../img/formula-1-logo-png_seeklogo-330361.png" alt="F1 Logo" class="h-16">
+      </div>
+      <h1 class="text-2xl font-bold mb-4 text-center">Classificação</h1>
+      <form id="meuForm" action="" method="get" class="mb-6">
+        <div class="mb-4">
+          <label class="block text-gray-700 text-sm font-bold mb-2" for="piloto">
+            Nome do Piloto
+          </label>
+          <input
+            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            type="text" name="piloto" id="piloto" placeholder="Ex.: Lewis Hamilton" required
+          />
+        </div>
+
+        <div class="grid grid-cols-3 gap-4 mb-4">
+          <div>
+            <label class="block text-gray-700 text-sm font-bold mb-2" for="minutos">
+              Minutos
+            </label>
+            <input class="shadow border rounded w-full py-2 px-3 text-gray-700"
+              type="number" name="minutos" id="minutos" min="0" required />
+          </div>
+          <div>
+            <label class="block text-gray-700 text-sm font-bold mb-2" for="segundos">
+              Segundos
+            </label>
+            <input class="shadow border rounded w-full py-2 px-3 text-gray-700"
+              type="number" name="segundos" id="segundos" min="0" max="59" required />
+          </div>
+          <div>
+            <label class="block text-gray-700 text-sm font-bold mb-2" for="milésimos">
+              Milésimos
+            </label>
+            <input class="shadow border rounded w-full py-2 px-3 text-gray-700"
+              type="number" name="milésimos" id="milésimos" min="0" max="999" required />
+          </div>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <button
+            class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            type="submit"
+          >
+            Adicionar piloto
+          </button>
+          <button
+            id="limpar"
+            class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded"
+            type="button"
+          >
+            Limpar fila
+          </button>
+        </div>
+
+        <p id="erro" class="text-red-600 text-sm mt-3 hidden"></p>
+      </form>
+
+      <!-- Lista da Fila -->
+      <div>
+        <h2 class="text-xl font-semibold mb-2">Classificação atual</h2>
+        <div id="lista" class="bg-gray-50 border rounded p-4">
+          <p class="text-gray-600">Nenhum piloto na fila ainda.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    class FilaPolePosition {
+      constructor() {
+        this.fila = [];
+      }
+
+      adicionar(piloto, minutos, segundos, milesimos) {
+        // Converter tudo para milésimos totais
+        let tempoTotalMs = (minutos * 60 * 1000) + (segundos * 1000) + milesimos;
+        this.fila.push({ piloto, minutos, segundos, milesimos, tempoTotalMs });
+        this.fila.sort((a, b) => a.tempoTotalMs - b.tempoTotalMs);
+      }
+
+      limpar() {
+        this.fila = [];
+      }
+
+      obter() {
+        return this.fila;
+      }
+    }
+
+    const fila = new FilaPolePosition();
+    const form = document.getElementById("meuForm");
+    const lista = document.getElementById("lista");
+    const erro = document.getElementById("erro");
+    const limparBtn = document.getElementById("limpar");
+
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      const piloto = document.getElementById("piloto").value.trim();
+      const minutos = parseInt(document.getElementById("minutos").value);
+      const segundos = parseInt(document.getElementById("segundos").value);
+      const milesimos = parseInt(document.getElementById("milésimos").value);
+
+      if (!piloto) {
+        mostrarErro("Informe o nome do piloto.");
+        return;
+      }
+      if (isNaN(minutos) || isNaN(segundos) || isNaN(milesimos)) {
+        mostrarErro("Informe valores válidos.");
+        return;
+      }
+
+      ocultarErro();
+      fila.adicionar(piloto, minutos, segundos, milesimos);
+      renderizarLista();
+      form.reset();
+      document.getElementById("piloto").focus();
+    });
+
+    limparBtn.addEventListener("click", function () {
+      fila.limpar();
+      renderizarLista();
+      ocultarErro();
+    });
+
+    function mostrarErro(msg) {
+      erro.textContent = msg;
+      erro.classList.remove("hidden");
+    }
+
+    function ocultarErro() {
+      erro.classList.add("hidden");
+      erro.textContent = "";
+    }
+
+    function renderizarLista() {
+      const dados = fila.obter();
+
+      if (dados.length === 0) {
+        lista.innerHTML = `<p class="text-gray-600">Nenhum piloto na fila ainda.</p>`;
+        return;
+      }
+
+      const linhas = dados
+        .map(
+          (item, index) => `
+          <div class="flex items-center justify-between py-2 border-b last:border-b-0">
+            <span class="font-medium">${index + 1}º</span>
+            <span>${item.piloto}</span>
+            <span class="text-gray-700">${item.minutos}:${String(item.segundos).padStart(2,"0")}.${String(item.milesimos).padStart(3,"0")}</span>
+          </div>
+        `
+        )
+        .join("");
+
+      lista.innerHTML = `<div class="divide-y">${linhas}</div>`;
+    }
+
+    renderizarLista();
+  </script>
+</body>
+</html>

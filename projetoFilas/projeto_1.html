@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Pole Position F1 - Melhor Volta</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+  <div class="min-h-screen flex items-start justify-center py-10">
+    <div class="w-full max-w-2xl bg-white shadow-md rounded px-8 pt-6 pb-8">
+      <div id="main" class="min-h-screen flex items-start justify-center py-10">
+      <div class="w-full max-w-2xl bg-white shadow-md rounded px-8 pt-6 pb-8">
+      <h1 class="text-2xl font-bold mb-4">Pole Position - Fórmula 1</h1>
+      <div class="flex justify-center mb-6">
+        <img src="../img/formula-1-logo-png_seeklogo-330361.png" alt="F1 Logo" class="h-16">
+      </div>
+
+      <form id="form" class="mb-6">
+        <div class="mb-4">
+          <label class="block text-gray-700 text-sm font-bold mb-2" for="piloto">
+            Nome do Piloto
+          </label>
+          <input class="shadow border rounded w-full py-2 px-3 text-gray-700"
+            type="text" id="piloto" required />
+        </div>
+
+        <div class="grid grid-cols-3 gap-4 mb-4">
+          <div>
+            <label class="block text-gray-700 text-sm font-bold mb-2" for="minutos">
+              Minutos
+            </label>
+            <input class="shadow border rounded w-full py-2 px-3 text-gray-700"
+              type="number" id="minutos" min="0" required />
+          </div>
+          <div>
+            <label class="block text-gray-700 text-sm font-bold mb-2" for="segundos">
+              Segundos
+            </label>
+            <input class="shadow border rounded w-full py-2 px-3 text-gray-700"
+              type="number" id="segundos" min="0" max="59" required />
+          </div>
+          <div>
+            <label class="block text-gray-700 text-sm font-bold mb-2" for="milesimos">
+              Milésimos
+            </label>
+            <input class="shadow border rounded w-full py-2 px-3 text-gray-700"
+              type="number" id="milesimos" min="0" max="999" required />
+          </div>
+        </div>
+
+        <div class="flex gap-3">
+          <button class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" type="submit">
+            Registrar volta
+          </button>
+          <button id="remover" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded" type="button">
+            Anular volta
+          </button>
+        </div>
+      </form>
+
+      <div>
+        <h2 class="text-xl font-semibold mb-2">Classificação atual</h2>
+        <div id="lista" class="bg-gray-50 border rounded p-4">
+          <p class="text-gray-600">Fila vazia.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+  class Node {
+    constructor(piloto) {
+      this.piloto = piloto;
+      this.voltas = [];
+      this.next = null;
+    }
+
+    adicionarVolta(minutos, segundos, milesimos) {
+      let tempoMs = (minutos * 60 * 1000) + (segundos * 1000) + milesimos;
+      this.voltas.push(tempoMs);
+    }
+
+    melhorVolta() {
+      return Math.min(...this.voltas);
+    }
+
+    formatarTempo(ms) {
+      let minutos = Math.floor(ms / 60000);
+      ms %= 60000;
+      let segundos = Math.floor(ms / 1000);
+      let milesimos = ms % 1000;
+      return `${minutos}:${String(segundos).padStart(2,"0")}.${String(milesimos).padStart(3,"0")}`;
+    }
+  }
+
+  class LinkedQueue {
+    constructor() {
+      this.head = null;
+      this.tail = null;
+    }
+
+    enqueue(piloto, minutos, segundos, milesimos) {
+      let atual = this.head;
+      while (atual) {
+        if (atual.piloto === piloto) {
+          atual.adicionarVolta(minutos, segundos, milesimos);
+          this.reordenar();
+          return;
+        }
+        atual = atual.next;
+      }
+
+      const novo = new Node(piloto);
+      novo.adicionarVolta(minutos, segundos, milesimos);
+
+      if (!this.head) {
+        this.head = novo;
+        this.tail = novo;
+        return;
+      }
+
+      if (novo.melhorVolta() < this.head.melhorVolta()) {
+        novo.next = this.head;
+        this.head = novo;
+        return;
+      }
+
+      atual = this.head;
+      while (atual.next && atual.next.melhorVolta() <= novo.melhorVolta()) {
+        atual = atual.next;
+      }
+
+      novo.next = atual.next;
+      atual.next = novo;
+      if (!novo.next) this.tail = novo;
+    }
+
+    dequeue() {
+      if (!this.head) return null;
+      const removido = this.head;
+      this.head = this.head.next;
+      if (!this.head) this.tail = null;
+      return removido;
+    }
+
+    reordenar() {
+      let arr = this.toArray();
+      arr.sort((a,b) => a.melhorVolta() - b.melhorVolta());
+      this.head = null;
+      this.tail = null;
+      arr.forEach(node => {
+        node.next = null;
+        if (!this.head) {
+          this.head = node;
+          this.tail = node;
+        } else {
+          this.tail.next = node;
+          this.tail = node;
+        }
+      });
+    }
+
+    toArray() {
+      let arr = [];
+      let atual = this.head;
+      while (atual) {
+        arr.push(atual);
+        atual = atual.next;
+      }
+      return arr;
+    }
+  }
+
+  const fila = new LinkedQueue();
+  const form = document.getElementById("form");
+  const lista = document.getElementById("lista");
+  const removerBtn = document.getElementById("remover");
+
+  form.addEventListener("submit", e => {
+    e.preventDefault();
+    const piloto = document.getElementById("piloto").value.trim();
+    const minutos = parseInt(document.getElementById("minutos").value);
+    const segundos = parseInt(document.getElementById("segundos").value);
+    const milesimos = parseInt(document.getElementById("milesimos").value);
+
+    fila.enqueue(piloto, minutos, segundos, milesimos);
+    renderizar();
+    form.reset();
+  });
+
+  removerBtn.addEventListener("click", () => {
+    const removido = fila.dequeue();
+    if (removido) alert("Removido: " + removido.piloto);
+    renderizar();
+  });
+
+  function renderizar() {
+    const dados = fila.toArray();
+    if (dados.length === 0) {
+      lista.innerHTML = `<p class="text-gray-600">Fila vazia.</p>`;
+      return;
+    }
+
+    const tempoLider = dados[0].melhorVolta();
+
+    lista.innerHTML = dados.map((item, i) => {
+      let diff = item.melhorVolta() - tempoLider;
+      let diffStr = i === 0 ? "Líder" : `+${(diff/1000).toFixed(3)}s`;
+      return `
+        <div class="flex justify-between py-1 border-b">
+          <span>${i+1}º</span>
+          <span>${item.piloto}</span>
+          <span>Melhor volta: ${item.formatarTempo(item.melhorVolta())} (${item.voltas.length} voltas) — ${diffStr}</span>
+        </div>
+      `;
+    }).join("");
+  }
+</script>
+</body>
+</html>
